@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ request.user.username }}!</h1>
+    <p>Total Users: {{ total_users }}</p>
+
+    <h2>Management</h2>
+    <ul>
+        {% comment %} <li><a href="{% url 'user_management' %}">User Management</a></li>
+        <li><a href="{% url 'announcement_management' %}">Announcements Management</a></li> {% endcomment %}
+    </ul>
+</body>
+</html>

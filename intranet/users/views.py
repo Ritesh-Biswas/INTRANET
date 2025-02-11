@@ -1,6 +1,7 @@
-from django.shortcuts import redirect # type: ignore
+from django.shortcuts import redirect,render # type: ignore
 from django.contrib.auth.decorators import login_required # type: ignore
 from django.http import HttpResponseForbidden, HttpResponse # type: ignore
+from users.models import CustomUser
 
 @login_required
 def role_based_redirect(request):
@@ -17,7 +18,15 @@ def role_based_redirect(request):
     
 @login_required
 def admin_dashboard(request):
-    return HttpResponse("Welcome to the Admin Dashboard!")
+     # Ensure only Admin users can access this view
+    if request.user.role != "Admin":
+        return render(request, "403.html", status=403)  # Custom 403 page if user isn't Admin
+    
+    # Count total users
+    total_users = CustomUser.objects.filter(is_active=True).count()
+    
+    # Render the dashboard
+    return render(request, "admin_dashboard.html", {"total_users": total_users})
 
 @login_required
 def hr_dashboard(request):
