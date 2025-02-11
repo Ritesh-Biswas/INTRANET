@@ -11,6 +11,10 @@ class CustomUser(AbstractUser):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='IT')
     is_active = models.BooleanField(default=True)  # For soft delete functionality
 
+    def is_editable_by_hr(self):
+        """Check if the user is editable by an HR user."""
+        return self.role in ['IT', 'Marketing']  # Editable roles for HR
+
 class Announcement(models.Model):
     ANNOUNCEMENT_TYPE_CHOICES = [
         ('All Users', 'All Users'),
@@ -27,3 +31,12 @@ class Announcement(models.Model):
 
     def __str__(self):
         return self.title
+
+#Model for User Document
+class UserDocument(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='documents')
+    document = models.FileField(upload_to='user_documents/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Document for {self.user.username} - {self.document.name}"

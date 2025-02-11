@@ -1,7 +1,7 @@
 from django.shortcuts import redirect,render,get_object_or_404 # type: ignore
 from django.contrib.auth.decorators import login_required # type: ignore
 from django.http import HttpResponseForbidden, HttpResponse # type: ignore
-from users.models import CustomUser,Announcement
+from users.models import CustomUser,Announcement,UserDocument
 from django.contrib import messages # type: ignore
 from django.urls import reverse # type: ignore
 
@@ -160,10 +160,65 @@ def delete_announcement(request, announcement_id):
     return redirect(reverse("announcement_management"))
 
 
+
+
 # HR Dashboard is Added 
 @login_required
 def hr_dashboard(request):
-    return HttpResponse("Welcome to the HR Dashboard!")
+    if request.user.role != "HR":
+        return HttpResponseForbidden("You are not authorized to access this page.")
+
+    users = CustomUser.objects.filter(role__in=['IT', 'Marketing']).order_by('username')
+    return render(request, "hr_dashboard.html", {"users": users})
+
+@login_required
+def upload_user_document(request, user_id):
+    if request.user.role != "HR":
+        return HttpResponseForbidden("You are not authorized to access this page.")
+
+    user = get_object_or_404(CustomUser, id=user_id)
+    if not user.is_editable_by_hr():
+        return HttpResponseForbidden("You are not authorized to upload documents for this user.")
+
+    if request.method == "POST":
+        document = request.FILES.get("document")
+        if document:
+            UserDocument.objects.create(user=user, document=document)
+            messages.success(request, "Document uploaded successfully!")
+        return redirect(reverse("hr_dashboard"))
+
+    return render(request, "upload_user_document.html", {"user": user})
+
+@login_required
+def edit_user_role(request, user_id):
+    if request.user.role != "HR":
+        return HttpResponseForbidden("You are not authorized to access this page.")
+
+    user = get_object_or_404(CustomUser, id=user_id)
+    if not user.is_editable_by_hr():
+        return HttpResponseForbidden("You are not authorized to edit this user's role.")
+
+    if request.method == "POST":
+        new_role = request.POST.get("role")
+        if new_role and new_role in dict(CustomUser.ROLE_CHOICES).keys():
+            user.role = new_role
+            user.save()
+            messages.success(request, "User role updated successfully!")
+            return redirect(reverse("hr_dashboard"))
+
+    return render(request, "edit_user_role.html", {"user": user})
+
+@login_required
+def view_user_info(request, user_id):
+    if request.user.role != "HR":
+        return HttpResponseForbidden("You are not authorized to access this page.")
+
+    user = get_object_or_404(CustomUser, id=user_id)
+    if not user.is_editable_by_hr():
+        return HttpResponseForbidden("You are not authorized to view this user's info.")
+
+    documents = UserDocument.objects.filter(user=user)
+    return render(request, "view_user_info.html", {"user": user, "documents": documents})
 
 # Employee Dashboard is Added 
 @login_required
