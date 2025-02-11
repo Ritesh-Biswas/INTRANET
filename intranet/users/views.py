@@ -252,6 +252,15 @@ def create_announcement_of_hr(request):
 
     return render(request, "create_announcement_of_hr.html")
 
+@login_required
+def view_announcement_of_hr(request, announcement_id):
+    if request.user.role != "HR":
+        return HttpResponseForbidden("You are not authorized to access this page.")
+
+    announcement = get_object_or_404(Announcement, id=announcement_id)
+    return render(request, "view_announcement_of_hr.html", {"announcement": announcement})
+
+
 
 @login_required
 def delete_announcement_of_hr(request, announcement_id):

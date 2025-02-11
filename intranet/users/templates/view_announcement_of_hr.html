@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Announcement</title>
+</head>
+<body>
+    <h1>{{ announcement.title }}</h1>
+    <p><strong>Type:</strong> {{ announcement.announcement_type }}</p>
+    <p><strong>Content:</strong></p>
+    <p>{{ announcement.content }}</p>
+    <p><strong>Created At:</strong> {{ announcement.created_at }}</p>
+    <p><strong>Updated At:</strong> {{ announcement.updated_at }}</p>
+
+    {% if announcement.attachment %}
+        <p><strong>Attachment:</strong> <a href="{{ announcement.attachment.url }}" target="_blank">View Attachment</a></p>
+    {% endif %}
+
+    <a href="{% url 'hr_announcements' %}">Back to Announcements</a>
+</body>
+</html>
