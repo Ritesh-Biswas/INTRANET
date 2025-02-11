@@ -1,0 +1,12 @@
+from django.contrib.auth.models import AbstractUser # type: ignore
+from django.db import models # type: ignore
+
+class CustomUser(AbstractUser):
+    ROLE_CHOICES = [
+        ('Admin', 'Admin'),
+        ('HR', 'HR'),
+        ('IT', 'IT'),
+        ('Marketing', 'Marketing'),
+    ]
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='IT')
+    is_active = models.BooleanField(default=True)  # For soft delete functionality
