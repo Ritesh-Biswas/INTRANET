@@ -108,7 +108,7 @@ def announcement_management(request):
 
 @login_required
 def create_announcement(request):
-    if request.user.role != "Admin":
+    if request.user.role not in ("Admin", "HR"):
         return HttpResponseForbidden("You are not authorized to access this page.")
 
     if request.method == "POST":
@@ -219,6 +219,49 @@ def view_user_info(request, user_id):
 
     documents = UserDocument.objects.filter(user=user)
     return render(request, "view_user_info.html", {"user": user, "documents": documents})
+
+@login_required
+def hr_announcements(request):
+    if request.user.role not in ("Admin", "HR"):
+        return HttpResponseForbidden("You are not authorized to access this page.")
+
+    announcements = Announcement.objects.all().order_by('-created_at')
+    return render(request, "hr_announcements.html", {"announcements": announcements})
+
+
+@login_required
+def create_announcement_of_hr(request):
+    if request.user.role not in ("Admin", "HR"):
+        return HttpResponseForbidden("You are not authorized to access this page.")
+
+    if request.method == "POST":
+        title = request.POST.get("title")
+        content = request.POST.get("content")
+        announcement_type = request.POST.get("announcement_type")
+        attachment = request.FILES.get("attachment")
+
+        if title and content and announcement_type:
+            announcement = Announcement.objects.create(
+                title=title,
+                content=content,
+                announcement_type=announcement_type,
+                attachment=attachment
+            )
+            messages.success(request, "Announcement created successfully!")
+            return redirect("hr_announcements")
+
+    return render(request, "create_announcement_of_hr.html")
+
+
+@login_required
+def delete_announcement(request, announcement_id):
+    if request.user.role not in ("Admin", "HR"):
+        return HttpResponseForbidden("You are not authorized to access this page.")
+
+    announcement = get_object_or_404(Announcement, id=announcement_id)
+    announcement.delete()
+    messages.success(request, "Announcement deleted successfully!")
+    return redirect("hr_announcements")
 
 # Employee Dashboard is Added 
 @login_required

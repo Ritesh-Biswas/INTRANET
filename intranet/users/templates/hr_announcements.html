@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Announcements</title>
+</head>
+<body>
+    <h1>Announcements</h1>
+    <a href="{% url 'create_announcement' %}">Create New Announcement</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Created At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for announcement in announcements %}
+            <tr>
+                <td>{{ announcement.title }}</td>
+                <td>{{ announcement.announcement_type }}</td>
+                <td>{{ announcement.created_at }}</td>
+                <td>
+                    {% comment %} <a href="{{ announcement.attachment.url }}" target="_blank">View Attachment</a> |  {% endcomment %}
+                    <a href="{% url 'delete_announcement' announcement.id %}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'hr_dashboard' %}">Back to Dashboard</a>
+</body>
+</html>
