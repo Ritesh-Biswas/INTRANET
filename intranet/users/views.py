@@ -4,7 +4,7 @@ from django.http import HttpResponseForbidden, HttpResponse # type: ignore
 from users.models import CustomUser,Announcement,UserDocument
 from django.contrib import messages # type: ignore
 from django.urls import reverse # type: ignore
-from django.db.models import Q 
+from django.db.models import Q  # type: ignore
 
 
 # Checking user role and redirect to appropriate dashboard

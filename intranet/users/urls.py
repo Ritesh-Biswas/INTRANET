@@ -3,7 +3,7 @@ from django.urls import path # type: ignore
 from .views import role_based_redirect,hr_dashboard,employee_dashboard,admin_dashboard,user_management,create_user,update_user,delete_user,announcement_management,create_announcement,update_announcement,delete_announcement,upload_user_document, view_user_info,edit_user_role,hr_announcements,create_announcement_of_hr,delete_announcement_of_hr,view_announcement_of_hr,employee_announcements
 
 urlpatterns = [
-    path("login/", LoginView.as_view(template_name="login.html"), name="login"),
+    path("", LoginView.as_view(template_name="login.html"), name="login"),
     path("redirect/", role_based_redirect, name="role_redirect"),
     path("admin_dashboard/", admin_dashboard, name="admin_dashboard"),
 
