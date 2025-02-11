@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Announcements</title>
+</head>
+<body>
+    <h1>Announcements</h1>
+
+    {% if announcements %}
+        <ul>
+            {% for announcement in announcements %}
+                <li>
+                    <h3>{{ announcement.title }}</h3>
+                    <p><strong>Type:</strong> {{ announcement.announcement_type }}</p>
+                    <p>{{ announcement.content }}</p>
+                    {% if announcement.attachment %}
+                        <p><strong>Attachment:</strong> <a href="{{ announcement.attachment.url }}" target="_blank">View</a></p>
+                    {% endif %}
+                    <hr>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No announcements available.</p>
+    {% endif %}
+
+    <a href="{% url 'employee_dashboard' %}">Back to Dashboard</a>
+</body>
+</html>

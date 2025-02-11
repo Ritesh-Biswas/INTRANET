@@ -1,6 +1,6 @@
 from django.contrib.auth.views import LoginView # type: ignore
 from django.urls import path # type: ignore
-from .views import role_based_redirect,hr_dashboard,employee_dashboard,admin_dashboard,user_management,create_user,update_user,delete_user,announcement_management,create_announcement,update_announcement,delete_announcement,upload_user_document, view_user_info,edit_user_role,hr_announcements,create_announcement_of_hr,delete_announcement_of_hr,view_announcement_of_hr
+from .views import role_based_redirect,hr_dashboard,employee_dashboard,admin_dashboard,user_management,create_user,update_user,delete_user,announcement_management,create_announcement,update_announcement,delete_announcement,upload_user_document, view_user_info,edit_user_role,hr_announcements,create_announcement_of_hr,delete_announcement_of_hr,view_announcement_of_hr,employee_announcements
 
 urlpatterns = [
     path("login/", LoginView.as_view(template_name="login.html"), name="login"),
@@ -27,4 +27,5 @@ urlpatterns = [
     path('hr-dashboard/announcements/view/<int:announcement_id>/', view_announcement_of_hr, name='view_announcement_of_hr'),
 
     path("employee-dashboard/", employee_dashboard, name="employee_dashboard"),
+    path('employee-dashboard/announcements/', employee_announcements, name='employee_announcements'),
 ]

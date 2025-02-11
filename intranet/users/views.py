@@ -4,6 +4,7 @@ from django.http import HttpResponseForbidden, HttpResponse # type: ignore
 from users.models import CustomUser,Announcement,UserDocument
 from django.contrib import messages # type: ignore
 from django.urls import reverse # type: ignore
+from django.db.models import Q 
 
 
 # Checking user role and redirect to appropriate dashboard
@@ -275,5 +276,21 @@ def delete_announcement_of_hr(request, announcement_id):
 # Employee Dashboard is Added 
 @login_required
 def employee_dashboard(request):
-    return HttpResponse("Welcome to the Employee Dashboard!")
+    if request.user.role not in ["IT", "Marketing"]:
+        return HttpResponseForbidden("You are not authorized to access this page.")
+
+    return render(request, "employee_dashboard.html")
+
+
+@login_required
+def employee_announcements(request):
+    if request.user.role not in ["IT", "Marketing", "HR"]:
+        return HttpResponseForbidden("You are not authorized to access this page.")
+
+    # Fetch announcements meant for the user's role or for all users
+    announcements = Announcement.objects.filter(
+        Q(announcement_type="All Users") | Q(announcement_type=request.user.role)
+    ).order_by("-created_at")
+
+    return render(request, "employee_announcements.html", {"announcements": announcements})
 
