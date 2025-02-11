@@ -4,14 +4,267 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload User Document</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #1a1a1a;
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: #333;
+        }
+
+        .logout-link {
+            margin-top: auto;
+            color: #e0e0e0;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-link:hover {
+            background-color: #333;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 1.875rem;
+            color: #1a1a1a;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: #666;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            background-color: #f0f0f0;
+        }
+
+        .back-button:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Form Styles */
+        .upload-form {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .upload-form label {
+            display: block;
+            font-size: 0.875rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-form input[type="file"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .upload-form button {
+            background-color: #1a1a1a;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-form button:hover {
+            background-color: #333;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 64px;
+                padding: 1rem 0.5rem;
+            }
+
+            .sidebar-header h2,
+            .user-info span,
+            .nav-links span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 64px;
+                padding: 1.5rem;
+            }
+
+            .nav-links a {
+                justify-content: center;
+                padding: 0.75rem;
+            }
+
+            .logout-link {
+                justify-content: center;
+                padding: 0.75rem;
+            }
+
+            .logout-link span {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .upload-form {
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Upload Document for {{ user.username }}</h1>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <label>Document:</label>
-        <input type="file" name="document" required><br>
-        <button type="submit">Upload</button>
-    </form>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="user-info">
+                <div class="avatar">
+                    <i class="ph ph-user"></i>
+                </div>
+                <span>{{ request.user.username }}</span>
+            </div>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li>
+                    <a href="{% url 'hr_dashboard' %}">
+                        <i class="ph ph-gauge"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'hr_announcements' %}">
+                        <i class="ph ph-megaphone"></i>
+                        <span>Announcements</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <a href="{% url 'logout' %}" class="logout-link">
+            <i class="ph ph-sign-out"></i>
+            <span>Logout</span>
+        </a>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Upload Document for {{ user.username }}</h1>
+            <a href="{% url 'hr_dashboard' %}" class="back-button">
+                <i class="ph ph-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+
+        <div class="upload-form">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label>Document:</label>
+                <input type="file" name="document" required><br>
+                <button type="submit">Upload</button>
+            </form>
+        </div>
+    </main>
 </body>
 </html>

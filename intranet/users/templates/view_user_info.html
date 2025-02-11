@@ -3,27 +3,355 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View User Info</title>
+    <title>User Information - HR Dashboard</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #1a1a1a;
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: #333;
+        }
+
+        .logout-link {
+            margin-top: auto;
+            color: #e0e0e0;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-link:hover {
+            background-color: #333;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 1.875rem;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: #666;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            background-color: #f0f0f0;
+        }
+
+        .back-button:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* User Info Card */
+        .user-info-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-item {
+            margin-bottom: 1rem;
+        }
+
+        .info-label {
+            font-size: 0.875rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            color: #1a1a1a;
+            font-weight: 500;
+        }
+
+        /* Documents Section */
+        .documents-section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .documents-list {
+            list-style: none;
+        }
+
+        .document-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .document-item:last-child {
+            border-bottom: none;
+        }
+
+        .document-link {
+            color: #1976d2;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .document-link:hover {
+            text-decoration: underline;
+        }
+
+        .document-date {
+            color: #666;
+            font-size: 0.875rem;
+            margin-left: auto;
+        }
+
+        .no-documents {
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 64px;
+                padding: 1rem 0.5rem;
+            }
+
+            .sidebar-header h2,
+            .user-info span,
+            .nav-links span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 64px;
+                padding: 1.5rem;
+            }
+
+            .nav-links a {
+                justify-content: center;
+                padding: 0.75rem;
+            }
+
+            .logout-link {
+                justify-content: center;
+                padding: 0.75rem;
+            }
+
+            .logout-link span {
+                display: none;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 1.5rem;
+            }
+            
+            .document-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .document-date {
+                margin-left: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>User Information: {{ user.username }}</h1>
-    <p><strong>Full Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>Role:</strong> {{ user.role }}</p>
-    {% comment %} <p><strong>Account Status:</strong> {{ "Active" if user.is_active else "Inactive" }}</p> {% endcomment %}
-
-    <h2>Uploaded Documents:</h2>
-    {% if documents %}
-        <ul>
-            {% for doc in documents %}
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="user-info">
+                <div class="avatar">
+                    <i class="ph ph-user"></i>
+                </div>
+                <span>{{ request.user.username }}</span>
+            </div>
+        </div>
+        <nav>
+            <ul class="nav-links">
                 <li>
-                    <a href="{{ doc.document.url }}" target="_blank">{{ doc.document.name }}</a> (Uploaded on: {{ doc.uploaded_at }})
+                    <a href="{% url 'hr_dashboard' %}">
+                        <i class="ph ph-gauge"></i>
+                        <span>Dashboard</span>
+                    </a>
                 </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No documents uploaded for this user.</p>
-    {% endif %}
-    <a href="{% url 'hr_dashboard' %}">Back to Dashboard</a>
+                <li>
+                    <a href="{% url 'hr_announcements' %}">
+                        <i class="ph ph-megaphone"></i>
+                        <span>Announcements</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <a href="{% url 'logout' %}" class="logout-link">
+            <i class="ph ph-sign-out"></i>
+            <span>Logout</span>
+        </a>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">User Information</h1>
+            <a href="{% url 'hr_dashboard' %}" class="back-button">
+                <i class="ph ph-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+
+        <div class="user-info-card">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Username</div>
+                    <div class="info-value">{{ user.username }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Full Name</div>
+                    <div class="info-value">{{ user.first_name }} {{ user.last_name }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">{{ user.email }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Role</div>
+                    <div class="info-value">{{ user.role }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="documents-section">
+            <h2 class="section-title">Uploaded Documents</h2>
+            {% if documents %}
+                <ul class="documents-list">
+                    {% for doc in documents %}
+                        <li class="document-item">
+                            <a href="{{ doc.document.url }}" target="_blank" class="document-link">
+                                <i class="ph ph-file-text"></i>
+                                {{ doc.document.name }}
+                            </a>
+                            <span class="document-date">Uploaded on: {{ doc.uploaded_at }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="no-documents">No documents uploaded for this user.</p>
+            {% endif %}
+        </div>
+    </main>
 </body>
 </html>

@@ -4,40 +4,319 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HR Dashboard</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #1a1a1a;
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: #333;
+        }
+
+        .logout-link {
+            margin-top: auto;
+            color: #e0e0e0;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-link:hover {
+            background-color: #333;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.875rem;
+            color: #1a1a1a;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Table Styles */
+        .users-table {
+            width: 100%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .users-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .users-table th {
+            background-color: #f8f8f8;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #1a1a1a;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .users-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            color: #333;
+        }
+
+        .users-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .users-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        /* Action Links */
+        .action-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-link {
+            text-decoration: none;
+            color: #1a1a1a;
+            font-size: 0.875rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            background-color: #f0f0f0;
+        }
+
+        .action-link:hover {
+            background-color: #e0e0e0;
+        }
+
+        .view-link {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .view-link:hover {
+            background-color: #bbdefb;
+        }
+
+        .edit-link {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .edit-link:hover {
+            background-color: #c8e6c9;
+        }
+
+        .upload-link {
+            background-color: #fff3e0;
+            color: #f57c00;
+        }
+
+        .upload-link:hover {
+            background-color: #ffe0b2;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 64px;
+                padding: 1rem 0.5rem;
+            }
+
+            .sidebar-header h2,
+            .user-info span,
+            .nav-links span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 64px;
+                padding: 1.5rem;
+            }
+
+            .nav-links a {
+                justify-content: center;
+                padding: 0.75rem;
+            }
+
+            .logout-link {
+                justify-content: center;
+                padding: 0.75rem;
+            }
+
+            .logout-link span {
+                display: none;
+            }
+
+            .users-table {
+                overflow-x: auto;
+            }
+
+            .action-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>HR Dashboard</h1>
-    <nav>
-        <ul>
-            <li><a href="{% url 'logout' %}">Logout</a></li> <!-- Logout Link -->
-        </ul>
-    </nav>
-    <li><a href="{% url 'hr_announcements' %}">Announcements Management</a></li>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
-            <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.role }}</td>
-                <td>
-                    <a href="{% url 'view_user_info' user.id %}">View</a> | 
-                    <a href="{% url 'edit_user_role' user.id %}">Edit</a> | 
-                    <a href="{% url 'upload_user_document' user.id %}">Upload Document</a>
-                </td>
-                
-                
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="user-info">
+                <div class="avatar">
+                    <i class="ph ph-user"></i>
+                </div>
+                <span>{{ request.user.username }}</span>
+            </div>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li>
+                    <a href="{% url 'hr_dashboard' %}">
+                        <i class="ph ph-gauge"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'hr_announcements' %}">
+                        <i class="ph ph-megaphone"></i>
+                        <span>Announcements</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <a href="{% url 'logout' %}" class="logout-link">
+            <i class="ph ph-sign-out"></i>
+            <span>Logout</span>
+        </a>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">HR Dashboard</h1>
+        </div>
+
+        <div class="users-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.role }}</td>
+                        <td>
+                            <div class="action-links">
+                                <a href="{% url 'view_user_info' user.id %}" class="action-link view-link">
+                                    <i class="ph ph-eye"></i> View
+                                </a>
+                                <a href="{% url 'edit_user_role' user.id %}" class="action-link edit-link">
+                                    <i class="ph ph-pencil"></i> Edit
+                                </a>
+                                <a href="{% url 'upload_user_document' user.id %}" class="action-link upload-link">
+                                    <i class="ph ph-upload"></i> Upload
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
 </body>
 </html>
