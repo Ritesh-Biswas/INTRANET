@@ -1,7 +1,7 @@
 from django.shortcuts import redirect,render,get_object_or_404 # type: ignore
 from django.contrib.auth.decorators import login_required # type: ignore
 from django.http import HttpResponseForbidden, HttpResponse # type: ignore
-from users.models import CustomUser
+from users.models import CustomUser,Announcement
 from django.contrib import messages # type: ignore
 from django.urls import reverse # type: ignore
 
@@ -96,6 +96,68 @@ def delete_user(request, user_id):
     user.save()
     messages.success(request, f"User {user.username} deleted successfully!")
     return redirect(reverse("user_management"))
+
+@login_required
+def announcement_management(request):
+    if request.user.role != "Admin":
+        return HttpResponseForbidden("You are not authorized to access this page.")
+
+    announcements = Announcement.objects.all().order_by('-created_at')
+    return render(request, "announcement_management.html", {"announcements": announcements})
+
+
+@login_required
+def create_announcement(request):
+    if request.user.role != "Admin":
+        return HttpResponseForbidden("You are not authorized to access this page.")
+
+    if request.method == "POST":
+        title = request.POST.get("title")
+        content = request.POST.get("content")
+        announcement_type = request.POST.get("announcement_type")
+        attachment = request.FILES.get("attachment")
+
+        Announcement.objects.create(
+            title=title,
+            content=content,
+            announcement_type=announcement_type,
+            attachment=attachment,
+        )
+        messages.success(request, "Announcement created successfully!")
+        return redirect(reverse("announcement_management"))
+
+    return render(request, "create_announcement.html")
+
+
+@login_required
+def update_announcement(request, announcement_id):
+    if request.user.role != "Admin":
+        return HttpResponseForbidden("You are not authorized to access this page.")
+
+    announcement = get_object_or_404(Announcement, id=announcement_id)
+
+    if request.method == "POST":
+        announcement.title = request.POST.get("title")
+        announcement.content = request.POST.get("content")
+        announcement.announcement_type = request.POST.get("announcement_type")
+        if request.FILES.get("attachment"):
+            announcement.attachment = request.FILES.get("attachment")
+        announcement.save()
+        messages.success(request, "Announcement updated successfully!")
+        return redirect(reverse("announcement_management"))
+
+    return render(request, "update_announcement.html", {"announcement": announcement})
+
+
+@login_required
+def delete_announcement(request, announcement_id):
+    if request.user.role != "Admin":
+        return HttpResponseForbidden("You are not authorized to access this page.")
+
+    announcement = get_object_or_404(Announcement, id=announcement_id)
+    announcement.delete()
+    messages.success(request, "Announcement deleted successfully!")
+    return redirect(reverse("announcement_management"))
 
 
 # HR Dashboard is Added 

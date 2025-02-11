@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announcement Management</title>
+</head>
+<body>
+    <h1>Announcement Management</h1>
+    <p><a href="{% url 'create_announcement' %}">Create New Announcement</a></p>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Created At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for announcement in announcements %}
+            <tr>
+                <td>{{ announcement.id }}</td>
+                <td>{{ announcement.title }}</td>
+                <td>{{ announcement.announcement_type }}</td>
+                <td>{{ announcement.created_at }}</td>
+                <td>
+                    <a href="{% url 'update_announcement' announcement.id %}">Edit</a> |
+                    <a href="{% url 'delete_announcement' announcement.id %}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
