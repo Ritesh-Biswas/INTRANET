@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update User</title>
+</head>
+<body>
+    <h1>Update User</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label>Username:</label>
+        <input type="text" name="username" value="{{ user.username }}" required><br>
+        <label>Email:</label>
+        <input type="email" name="email" value="{{ user.email }}" required><br>
+        <label>Role:</label>
+        <select name="role" required>
+            <option value="Admin" {% if user.role == "Admin" %}selected{% endif %}>Admin</option>
+            <option value="HR" {% if user.role == "HR" %}selected{% endif %}>HR</option>
+            <option value="IT" {% if user.role == "IT" %}selected{% endif %}>IT</option>
+            <option value="Marketing" {% if user.role == "Marketing" %}selected{% endif %}>Marketing</option>
+        </select><br>
+        <button type="submit">Update</button>
+    </form>
+</body>
+</html>
