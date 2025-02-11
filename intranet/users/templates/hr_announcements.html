@@ -3,35 +3,333 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HR Announcements</title>
+    <title>HR Announcements - HR Dashboard</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #1a1a1a;
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: #333;
+        }
+
+        .logout-link {
+            margin-top: auto;
+            color: #e0e0e0;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-link:hover {
+            background-color: #333;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 1.875rem;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: #666;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            background-color: #f0f0f0;
+        }
+
+        .back-button:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Table Styles */
+        .announcements-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .announcements-table th,
+        .announcements-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .announcements-table th {
+            background-color: #f5f5f5;
+            color: #1a1a1a;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+        }
+
+        .announcements-table td {
+            color: #1a1a1a;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .actions a {
+            color: #1976d2;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .actions a:hover {
+            text-decoration: underline;
+        }
+        
+
+        .create-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            background-color: #1a1a1a;
+            margin-top: 1.5rem;
+        }
+
+        .create-button:hover {
+            background-color: #333;
+            
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 64px;
+                padding: 1rem 0.5rem;
+            }
+
+            .sidebar-header h2,
+            .user-info span,
+            .nav-links span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 64px;
+                padding: 1.5rem;
+            }
+
+            .nav-links a {
+                justify-content: center;
+                padding: 0.75rem;
+            }
+
+            .logout-link {
+                justify-content: center;
+                padding: 0.75rem;
+            }
+
+            .logout-link span {
+                display: none;
+            }
+
+            .announcements-table th,
+            .announcements-table td {
+                padding: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .create-button {
+                padding: 0.5rem;
+                font-size: 0.875rem;
+            }
+
+            .actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Announcements</h1>
-    <a href="{% url 'create_announcement' %}">Create New Announcement</a>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Type</th>
-                <th>Created At</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for announcement in announcements %}
-            <tr>
-                <td>{{ announcement.title }}</td>
-                <td>{{ announcement.announcement_type }}</td>
-                <td>{{ announcement.created_at }}</td>
-                <td>
-                    {% comment %} <a href="{{ announcement.attachment.url }}" target="_blank">View Attachment</a> |  {% endcomment %}
-                    <a href="{% url 'view_announcement_of_hr' announcement.id %}">View</a>
-                    <a href="{% url 'delete_announcement_of_hr' announcement.id %}">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <a href="{% url 'hr_dashboard' %}">Back to Dashboard</a>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="user-info">
+                <div class="avatar">
+                    <i class="ph ph-user"></i>
+                </div>
+                <span>{{ request.user.username }}</span>
+            </div>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li>
+                    <a href="{% url 'hr_dashboard' %}">
+                        <i class="ph ph-gauge"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'hr_announcements' %}">
+                        <i class="ph ph-megaphone"></i>
+                        <span>Announcements</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <a href="{% url 'logout' %}" class="logout-link">
+            <i class="ph ph-sign-out"></i>
+            <span>Logout</span>
+        </a>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Announcements</h1>
+            <a href="{% url 'hr_dashboard' %}" class="back-button">
+                <i class="ph ph-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+
+        <table class="announcements-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for announcement in announcements %}
+                <tr>
+                    <td>{{ announcement.title }}</td>
+                    <td>{{ announcement.announcement_type }}</td>
+                    <td>{{ announcement.created_at }}</td>
+                    <td class="actions">
+                        <a href="{% url 'view_announcement_of_hr' announcement.id %}">
+                            <i class="ph ph-eye"></i>
+                            View
+                        </a>
+                        <a href="{% url 'delete_announcement_of_hr' announcement.id %}">
+                            <i class="ph ph-trash"></i>
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% comment %} <a href="{% url 'hr_dashboard' %}" class="back-button">create-button
+            <i class="ph ph-arrow-left"></i>
+            Back to Dashboard
+        </a> {% endcomment %}
+        <a href="{% url 'create_announcement' %}" class="create-button">
+            <i class="ph ph-plus"></i>
+            Create New Announcement
+        </a>
+    </main>
 </body>
 </html>
