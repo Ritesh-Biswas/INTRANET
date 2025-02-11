@@ -231,7 +231,7 @@ def hr_announcements(request):
 
 @login_required
 def create_announcement_of_hr(request):
-    if request.user.role not in ("Admin", "HR"):
+    if request.user.role != "HR":
         return HttpResponseForbidden("You are not authorized to access this page.")
 
     if request.method == "POST":
@@ -254,8 +254,8 @@ def create_announcement_of_hr(request):
 
 
 @login_required
-def delete_announcement(request, announcement_id):
-    if request.user.role not in ("Admin", "HR"):
+def delete_announcement_of_hr(request, announcement_id):
+    if request.user.role != "HR":
         return HttpResponseForbidden("You are not authorized to access this page.")
 
     announcement = get_object_or_404(Announcement, id=announcement_id)

@@ -25,7 +25,7 @@
                 <td>{{ announcement.created_at }}</td>
                 <td>
                     {% comment %} <a href="{{ announcement.attachment.url }}" target="_blank">View Attachment</a> |  {% endcomment %}
-                    <a href="{% url 'delete_announcement' announcement.id %}">Delete</a>
+                    <a href="{% url 'delete_announcement_of_hr' announcement.id %}">Delete</a>
                 </td>
             </tr>
             {% endfor %}

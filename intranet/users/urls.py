@@ -1,6 +1,6 @@
 from django.contrib.auth.views import LoginView # type: ignore
 from django.urls import path # type: ignore
-from .views import role_based_redirect,hr_dashboard,employee_dashboard,admin_dashboard,user_management,create_user,update_user,delete_user,announcement_management,create_announcement,update_announcement,delete_announcement,upload_user_document, view_user_info,edit_user_role,hr_announcements,create_announcement_of_hr,delete_announcement
+from .views import role_based_redirect,hr_dashboard,employee_dashboard,admin_dashboard,user_management,create_user,update_user,delete_user,announcement_management,create_announcement,update_announcement,delete_announcement,upload_user_document, view_user_info,edit_user_role,hr_announcements,create_announcement_of_hr,delete_announcement_of_hr
 
 urlpatterns = [
     path("login/", LoginView.as_view(template_name="login.html"), name="login"),
@@ -23,7 +23,7 @@ urlpatterns = [
     path('hr-dashboard/edit-role/<int:user_id>/', edit_user_role, name='edit_user_role'),
     path('hr-dashboard/announcements/', hr_announcements, name='hr_announcements'),
     path('hr-dashboard/announcements/create/', create_announcement_of_hr, name='create_announcement_of_hr'),
-    path('hr-dashboard/announcements/delete/<int:announcement_id>/', delete_announcement, name='delete_announcement'),
+    path('hr-dashboard/announcements/delete/<int:announcement_id>/', delete_announcement_of_hr, name='delete_announcement_of_hr'),
 
     path("employee-dashboard/", employee_dashboard, name="employee_dashboard"),
 ]
