@@ -6,6 +6,11 @@
     <title>Admin Dashboard</title>
 </head>
 <body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'logout' %}">Logout</a></li> <!-- Logout Link -->
+        </ul>
+    </nav>
     <h1>Welcome, {{ request.user.username }}!</h1>
     <p>Total Users: {{ total_users }}</p>
 

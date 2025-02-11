@@ -7,6 +7,10 @@ from django.urls import reverse # type: ignore
 from django.db.models import Q  # type: ignore
 
 
+def home(request):
+    return render(request, "home.html")
+
+
 # Checking user role and redirect to appropriate dashboard
 @login_required
 def role_based_redirect(request):
